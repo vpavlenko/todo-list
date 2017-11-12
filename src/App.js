@@ -41,9 +41,19 @@ class App extends Component {
 		}
 	}
 	saveChanges() {
-		//former updateLocalStorage
-		return localStorage.setItem("state", JSON.stringify(this.state));
+		return localStorage.setItem(
+			"state",
+			JSON.stringify(Object.assign(this.state, { Snackbar: { open: false } }))
+		);
 	}
+
+	handleRequestClose = () => {
+		this.setState({
+			Snackbar: {
+				open: false
+			}
+		});
+	};
 
 	updateTask(updatedTask, updatedIndex) {
 		this.setState(
@@ -60,7 +70,7 @@ class App extends Component {
 							: task
 				),
 				Snackbar: {
-					open: true,
+					open: false,
 					message:
 						'Task "' +
 						updatedTask.text +
@@ -98,9 +108,9 @@ class App extends Component {
 	}
 	updateTaskDraft(e) {
 		this.setState({
-			draftTaskValue: e.target.value,
+			draftTaskValue: e.target.value
 			//don't like that i have to set it manually. how to resolve?
-			Snackbar: { open: false }
+			// Snackbar: { open: false }
 		});
 	}
 	removeTask(index) {
@@ -123,7 +133,8 @@ class App extends Component {
 				<div className="App">
 					<Paper
 						style={{ width: "500px", padding: "10px", margin: "auto" }}
-						zDepth={2}>
+						zDepth={2}
+					>
 						<List>
 							{this.state.tasks.map((item, index) => (
 								<div>
@@ -140,7 +151,8 @@ class App extends Component {
 															done: !item.done
 														},
 														index
-													)}
+													)
+												}
 											/>
 										}
 										primaryText={item.text}
@@ -157,7 +169,8 @@ class App extends Component {
 							onSubmit={e => {
 								e.preventDefault();
 								this.createTask();
-							}}>
+							}}
+						>
 							<TextField
 								hintText="Write your task here"
 								//this actually causes value to reset after submitting
